@@ -101,30 +101,6 @@ case "s": {
   }
 }
 break;
-case "smeme": {
-    try {
-        if (!/image/.test(quoted.msg?.mimetype)) {
-            return m.reply(`Envía/cita una imagen con el caption ${m.prefix + m.command} San|Abc`);
-        }
-        let arriba = m.text.split("|")[0] || "-";
-        let abajo = m.text.split("|")[1] || "-";
-
-        let media = await quoted.download();
-        let url = await catbox(media);
-
-        let smemeUrl = `https://api.memegen.link/images/custom/${encodeURIComponent(arriba)}/${encodeURIComponent(abajo)}.png?background=${url}`;
-
-        let sticker = await writeExif(
-            { mimetype: "image/png", data: await axios.get(smemeUrl, { responseType: "arraybuffer" }).then((res) => res.data) },
-            { packName: config.sticker.packname, packPublish: config.sticker.author }
-        );
-
-        await sock.sendMessage(m.cht, { sticker }, { quoted: m });
-    } catch (error) {
-        m.reply(`Error al crear el meme: ${error.message}`);
-    }
-    break;
-}
 case "wm":
 case "swm": {
     try {
@@ -306,47 +282,6 @@ case "bratgen": {
   );
 
   await m.reply({ sticker });
-}
-break;
-case 'gptonline': {
-  if (!m.text) return m.reply('tienes alguna pregunta')
-
-  const gptOnline = {
-    getNonceAndAny: async () => {
-      const { data } = await axios.get('https://gptonline.ai/id/chatgpt-online/')
-      const $ = cheerio.load(data)
-      const div = $('.wpaicg-chat-shortcode')
-      const nonce = div.attr('data-nonce')
-      const botId = div.attr('data-bot-id')
-      const postId = div.attr('data-post-id')
-      return { nonce, botId, postId }
-    },
-    chat: async (prompt) => {
-      let { nonce, botId, postId } = await gptOnline.getNonceAndAny()
-      let form = new FormData()
-      form.append('_wpnonce', nonce)
-      form.append('post_id', postId)
-      form.append('url', 'https://gptonline.ai/id/chatgpt-online/')
-      form.append('action', 'wpaicg_chat_shortcode_message')
-      form.append('message', prompt)
-      form.append('bot_id', botId)
-      form.append('chat_bot_identity', 'custom_bot_1040')
-      form.append('wpaicg_chat_history', '[]')
-      form.append('wpaicg_chat_client_id', 'LCgGOMeIOC')
-      const headersList = { headers: { ...form.getHeaders() } }
-      let { data } = await axios.post('https://gptonline.ai/id/wp-admin/admin-ajax.php', form, headersList)
-      return data
-    }
-  }
-
-  try {
-    const response = await gptOnline.chat(text)
-    if (response && response.data) {
-      m.reply(response.data)
-    }
-  } catch (error) {
-    m.reply('Error...')
-  }
 }
 break;
           case 'req': {
