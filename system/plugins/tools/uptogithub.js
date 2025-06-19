@@ -12,7 +12,7 @@ module.exports = {
   loading: true,
   async run(m, { sock }) {
     try {
-      const githubToken = "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"; // https://github.com/settings/tokens
+      const githubToken = ""; // https://github.com/settings/tokens
       const owner = "CarlosTwT"; // Nombre del propietario del repositorio
       const repo = "upto"; // Nombre del repositorio sin URL
       const branch = "main";
